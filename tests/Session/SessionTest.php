@@ -180,7 +180,6 @@ class SessionTest extends TestCase
         $this->assertNotSame($id, $session->getID());
     }
 
-
     public function testInjection()
     {
         $session = $this->factory->initSession('sig');
@@ -188,5 +187,30 @@ class SessionTest extends TestCase
             $section = $this->container->get(SectionInterface::class, "default");
             $this->assertSame("default", $section->getName());
         });
+    }
+
+    public function testSignatures()
+    {
+        $session = $this->factory->initSession('sig');
+        $session->getSection()->set("key", "value");
+        $session->commit();
+
+        $id = $session->getID();
+
+        $session = $this->factory->initSession('sig', $id);
+        $this->assertSame("value", $session->getSection()->get("key"));
+        $this->assertSame($id, $session->getID());
+        $session->commit();
+
+        $session = $this->factory->initSession('different', $id);
+        $this->assertSame(null, $session->getSection()->get("key"));
+        $this->assertNotSame($id, $session->getID());
+        $session->commit();
+
+        // must be dead
+        $session = $this->factory->initSession('sig', $id);
+        $this->assertSame(null, $session->getSection()->get("key"));
+        $this->assertNotSame($id, $session->getID());
+        $session->commit();
     }
 }
