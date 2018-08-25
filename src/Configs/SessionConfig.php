@@ -77,6 +77,10 @@ class SessionConfig extends InjectableConfig
             return null;
         }
 
+        if ($this->config['handler'] instanceof Autowire) {
+            return $this->config['handler'];
+        }
+
         if (class_exists($this->config['handler'])) {
             return new Autowire($this->config['handler']);
         }

@@ -42,4 +42,18 @@ class ConfigTest extends TestCase
             'directory' => sys_get_temp_dir()
         ]), $c->getHandler());
     }
+
+    public function testConfigAutowired()
+    {
+        $c = new SessionConfig([
+            'lifetime' => 86400,
+            'cookie'   => 'SID',
+            'secure'   => false,
+            'handler'  => new Autowire(FileHandler::class, ['directory' => sys_get_temp_dir()]),
+        ]);
+
+        $this->assertEquals(new Autowire(FileHandler::class, [
+            'directory' => sys_get_temp_dir()
+        ]), $c->getHandler());
+    }
 }
