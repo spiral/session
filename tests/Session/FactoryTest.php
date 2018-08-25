@@ -27,7 +27,6 @@ class FactoryTest extends TestCase
 
     /**
      * @expectedException \Spiral\Session\Exceptions\SessionException
-     * @expectedExceptionMessage Unable to init session handler Spiral\Session\Handlers\FileHandler
      */
     public function testConstructInvalid()
     {
@@ -46,7 +45,6 @@ class FactoryTest extends TestCase
 
     /**
      * @expectedException \Spiral\Session\Exceptions\SessionException
-     * @expectedExceptionMessage Unable to init session handler Spiral\Session\Handlers\FileHandler
      */
     public function testAlreadyStarted()
     {

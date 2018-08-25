@@ -8,6 +8,7 @@
 
 namespace Spiral\Session\Configs;
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 
 /**
@@ -33,7 +34,7 @@ class SessionConfig extends InjectableConfig
      *
      * @return array
      */
-    public function signHeaders(): array
+    public function getSignatureHeaders(): array
     {
         return [
             'User-Agent',
@@ -44,7 +45,7 @@ class SessionConfig extends InjectableConfig
     /**
      * @return int
      */
-    public function sessionLifetime(): int
+    public function getLifetime(): int
     {
         return $this->config['lifetime'];
     }
@@ -52,7 +53,7 @@ class SessionConfig extends InjectableConfig
     /**
      * @return string
      */
-    public function sessionCookie(): string
+    public function getCookie(): string
     {
         return $this->config['cookie'];
     }
@@ -60,38 +61,28 @@ class SessionConfig extends InjectableConfig
     /**
      * @return bool
      */
-    public function sessionSecure(): bool
+    public function isSecure(): bool
     {
         return $this->config['secure'] ?? false;
     }
 
     /**
-     * Default session handler. When NULL no handlers to be used.
+     * Get handler autowire options.
      *
-     * @return string|null
+     * @return Autowire
      */
-    public function sessionHandler(): ?string
+    public function getHandler(): ?Autowire
     {
-        return $this->config['handler'];
-    }
+        if (empty($this->config['handler'])) {
+            return null;
+        }
 
-    /**
-     * @param string $handler
-     *
-     * @return string
-     */
-    public function handlerClass(string $handler): string
-    {
-        return $this->config['handlers'][$handler]['class'];
-    }
+        if (class_exists($this->config['handler'])) {
+            return new Autowire($this->config['handler']);
+        }
 
-    /**
-     * @param string $handler
-     *
-     * @return array
-     */
-    public function handlerOptions(string $handler): array
-    {
-        return $this->config['handlers'][$handler]['options'] + ['lifetime' => $this->sessionLifetime()];
+        $handler = $this->config['handlers'][$this->config['handler']];
+
+        return new Autowire($handler['class'], $handler['options']);
     }
 }

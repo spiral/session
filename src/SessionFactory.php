@@ -8,6 +8,7 @@
 
 namespace Spiral\Session;
 
+use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Session\Configs\SessionConfig;
@@ -58,15 +59,11 @@ class SessionFactory implements SingletonInterface
         ini_set('session.use_cookies', false);
 
         //Initiating proper session handler
-        if (!empty($this->config->sessionHandler())) {
+        if (!empty($this->config->getHandler())) {
             try {
-                $handler = $this->initHandler($this->config->sessionHandler());
-            } catch (\Throwable $e) {
-                throw new SessionException(
-                    "Unable to init session handler {$this->config->sessionHandler()}",
-                    $e->getCode(),
-                    $e
-                );
+                $handler = $this->config->getHandler()->resolve($this->factory);
+            } catch (\Throwable|ContainerExceptionInterface $e) {
+                throw new SessionException($e->getMessage(), $e->getCode(), $e);
             }
 
             session_set_save_handler($handler, true);
@@ -74,22 +71,8 @@ class SessionFactory implements SingletonInterface
 
         return $this->factory->make(Session::class, [
             'clientSignature' => $clientSignature,
-            'lifetime'        => $this->config->sessionLifetime(),
+            'lifetime'        => $this->config->getLifetime(),
             'id'              => $id
         ]);
-    }
-
-    /**
-     * @param string $handler
-     *
-     * @return mixed|null|object
-     */
-    protected function initHandler(string $handler)
-    {
-        //Init handler
-        return $this->factory->make(
-            $this->config->handlerClass($handler),
-            $this->config->handlerOptions($handler)
-        );
     }
 }
