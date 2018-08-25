@@ -120,15 +120,9 @@ class Session implements SessionInterface
 
     /**
      * @inheritdoc
-     *
-     * @param bool $resume
      */
-    public function getID(bool $resume = false): ?string
+    public function getID(): ?string
     {
-        if ($resume) {
-            $this->resume();
-        }
-
         return $this->id;
     }
 
