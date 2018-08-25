@@ -37,7 +37,7 @@ class FileHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function close()
     {
@@ -45,7 +45,7 @@ class FileHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function destroy($session_id)
     {
@@ -53,7 +53,8 @@ class FileHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     * @codeCoverageIgnore
      */
     public function gc($maxlifetime)
     {
@@ -65,7 +66,7 @@ class FileHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function open($save_path, $session_id)
     {
@@ -73,7 +74,7 @@ class FileHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function read($session_id)
     {
@@ -83,7 +84,7 @@ class FileHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function write($session_id, $session_data)
     {

@@ -14,7 +14,7 @@ namespace Spiral\Session\Handlers;
 class NullHandler implements \SessionHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function close()
     {
@@ -22,7 +22,7 @@ class NullHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function destroy($session_id)
     {
@@ -30,7 +30,7 @@ class NullHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function gc($maxlifetime)
     {
@@ -38,7 +38,7 @@ class NullHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function open($save_path, $session_id)
     {
@@ -46,7 +46,7 @@ class NullHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function read($session_id)
     {
@@ -54,7 +54,7 @@ class NullHandler implements \SessionHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function write($session_id, $session_data)
     {

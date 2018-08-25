@@ -40,7 +40,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName(): string
     {
@@ -48,7 +48,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getIterator()
     {
@@ -56,7 +56,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getAll(): array
     {
@@ -66,7 +66,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function set(string $name, $value)
     {
@@ -76,7 +76,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function has(string $name)
     {
@@ -86,7 +86,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function get(string $name, $default = null)
     {
@@ -98,7 +98,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function pull(string $name, $default = null)
     {
@@ -109,7 +109,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function delete(string $name)
     {
@@ -118,7 +118,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function clear()
     {
@@ -166,7 +166,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function offsetExists($offset)
     {
@@ -174,7 +174,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function offsetGet($offset)
     {
@@ -182,7 +182,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function offsetSet($offset, $value)
     {
@@ -190,7 +190,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function offsetUnset($offset)
     {

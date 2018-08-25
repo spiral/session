@@ -75,7 +75,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isStarted(): bool
     {
@@ -83,7 +83,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function resume()
     {
@@ -119,7 +119,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @param bool $resume
      */
@@ -133,7 +133,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function regenerateID(): SessionInterface
     {
@@ -154,7 +154,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function commit(): bool
     {
@@ -169,7 +169,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function destroy(): bool
     {
@@ -183,7 +183,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getSection(string $name = null): SectionInterface
     {
@@ -191,7 +191,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function createInjection(\ReflectionClass $class, string $context = null)
     {
