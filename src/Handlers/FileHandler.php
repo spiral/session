@@ -46,6 +46,7 @@ class FileHandler implements \SessionHandlerInterface
 
     /**
      * @inheritdoc
+     * @codeCoverageIgnore
      */
     public function destroy($session_id)
     {

@@ -37,13 +37,9 @@ class SessionTest extends TestCase
             'lifetime' => 86400,
             'cookie'   => 'SID',
             'secure'   => false,
-            'handler'  => 'files',
-            'handlers' => [
-                'files' => [
-                    'class'   => FileHandler::class,
-                    'options' => ['directory' => sys_get_temp_dir()]
-                ]
-            ]
+            'handler'  => new Container\Autowire(FileHandler::class, [
+                'directory' => sys_get_temp_dir()
+            ]),
         ]), $this->container);
     }
 
@@ -62,6 +58,8 @@ class SessionTest extends TestCase
         $this->assertSame('value', $session->getSection()->get('key'));
 
         $session->destroy();
+        $session->resume();
+
         $this->assertSame(null, $session->getSection()->get('key'));
     }
 
@@ -91,21 +89,69 @@ class SessionTest extends TestCase
         $this->assertSame('value', $session->getSection()->get('key'));
     }
 
-//    public function testSetSid()
-//    {
-//        $this->http->riseMiddleware(SessionStarter::class);
-//
-//        $this->http->setEndpoint(function () {
-//            return $this->session->getSection('cli')->value++;
-//        });
-//
-//        $result = $this->get('/');
-//        $this->assertSame(200, $result->getStatusCode());
-//
-//        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-//        $this->assertArrayHasKey('SID', $cookies);
-//    }
-//
+    public function testSection()
+    {
+        $session = $this->factory->initSession('sig');
+        $section = $session->getSection('default');
+
+        $this->assertSame("default", $section->getName());
+
+        $section->set("key", "value");
+        foreach ($section as $key => $value) {
+            $this->assertSame("key", $key);
+            $this->assertSame("value", $value);
+        }
+
+        $this->assertSame("key", $key);
+        $this->assertSame("value", $value);
+
+        $this->assertSame("value", $section->pull("key"));
+        $this->assertSame(null, $section->pull("key"));
+    }
+
+    public function testSectionClear()
+    {
+        $session = $this->factory->initSession('sig');
+        $section = $session->getSection('default');
+
+        $section->set("key", "value");
+        $section->clear();
+        $this->assertSame(null, $section->pull("key"));
+    }
+
+    public function testSectionArrayAccess()
+    {
+        $session = $this->factory->initSession('sig');
+        $section = $session->getSection('default');
+
+        $section['key'] = 'value';
+        $this->assertSame('value', $section['key']);
+        $section->key = 'new value';
+        $this->assertSame('new value', $section->key);
+        $this->assertTrue(isset($section['key']));
+        $this->assertTrue(isset($section->key));
+
+        $section->delete('key');
+        $this->assertFalse(isset($section['key']));
+        $this->assertFalse(isset($section->key));
+
+        $section->key = 'new value';
+        unset($section->key);
+        $this->assertFalse(isset($section->key));
+
+
+        $section->key = 'new value';
+        unset($section['key']);
+        $this->assertFalse(isset($section->key));
+
+        $section->new = "another";
+
+        $session->commit();
+
+        $this->assertSame(null, $section->get("key"));
+        $this->assertSame("another", $section->get("new"));
+    }
+
 //    public function testSectionByInjection()
 //    {
 //        $this->http->riseMiddleware(SessionStarter::class);
