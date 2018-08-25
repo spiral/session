@@ -12,7 +12,7 @@
          stopOnError="false"
          stderr="true">
     <testsuites>
-        <testsuite name="Nested sessions over native PHP handlers">
+        <testsuite name="Secure sessions over native PHP handlers">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
