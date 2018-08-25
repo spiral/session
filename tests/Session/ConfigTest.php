@@ -30,11 +30,6 @@ class ConfigTest extends TestCase
             ]
         ]);
 
-        $this->assertSame([
-            'User-Agent',
-            'Accept-Language'
-        ], $c->getSignatureHeaders());
-
         $this->assertSame('SID', $c->getCookie());
         $this->assertSame(false, $c->isSecure());
         $this->assertSame(86400, $c->getLifetime());
