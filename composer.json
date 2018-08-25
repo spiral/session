@@ -1,7 +1,7 @@
 {
   "name": "spiral/session",
   "type": "library",
-  "description": "Nested Sessions management over native PHP session handlers",
+  "description": "Nested sessions over native PHP session handlers",
   "license": "MIT",
   "authors": [
     {
