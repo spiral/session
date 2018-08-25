@@ -1,0 +1,25 @@
+{
+  "name": "spiral/session",
+  "type": "library",
+  "description": "Nested Sessions management over native PHP session handlers",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Wolfy-J",
+      "email": "wolfy.jd@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "spiral/core": "^1.0",
+    "spiral/files": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Spiral\\Session\\": "src/"
+    }
+  }
+}
