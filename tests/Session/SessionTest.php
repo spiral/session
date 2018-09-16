@@ -9,7 +9,6 @@
 namespace Spiral\Session\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Core\BootloadManager;
 use Spiral\Core\Container;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
@@ -19,6 +18,8 @@ use Spiral\Session\Handlers\FileHandler;
 use Spiral\Session\SectionInterface;
 use Spiral\Session\Session;
 use Spiral\Session\SessionFactory;
+use Spiral\Session\SessionInterface;
+use Spiral\Session\SessionSection;
 
 class SessionTest extends TestCase
 {
@@ -37,8 +38,8 @@ class SessionTest extends TestCase
         $this->container = new Container();
         $this->container->bind(FilesInterface::class, Files::class);
 
-        $bootloader = new BootloadManager($this->container);
-        $bootloader->bootload([SessionBootloader::class]);
+        $this->container->bind(SessionInterface::class, Session::class);
+        $this->container->bind(SectionInterface::class, SessionSection::class);
 
         $this->factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
