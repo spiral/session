@@ -8,7 +8,7 @@
 
 namespace Spiral\Session;
 
-use Spiral\Session\Exceptions\SessionException;
+use Spiral\Session\Exception\SessionException;
 
 /**
  * Singular session section (session data isolator).

@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Session\Handlers;
+namespace Spiral\Session\Handler;
 
 use Spiral\Files\FilesInterface;
 

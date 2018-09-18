@@ -11,9 +11,9 @@ namespace Spiral\Session;
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Session\Configs\SessionConfig;
-use Spiral\Session\Exceptions\MultipleSessionException;
-use Spiral\Session\Exceptions\SessionException;
+use Spiral\Session\Config\SessionConfig;
+use Spiral\Session\Exception\MultipleSessionException;
+use Spiral\Session\Exception\SessionException;
 
 /**
  * Initiates session instance and configures session handlers.
@@ -21,7 +21,7 @@ use Spiral\Session\Exceptions\SessionException;
 class SessionFactory implements SingletonInterface
 {
     /**
-     * @var \Spiral\Session\Configs\SessionConfig
+     * @var \Spiral\Session\Config\SessionConfig
      */
     private $config;
 
@@ -31,8 +31,8 @@ class SessionFactory implements SingletonInterface
     private $factory;
 
     /**
-     * @param \Spiral\Session\Configs\SessionConfig $config
-     * @param \Spiral\Core\FactoryInterface         $factory
+     * @param \Spiral\Session\Config\SessionConfig $config
+     * @param \Spiral\Core\FactoryInterface        $factory
      */
     public function __construct(SessionConfig $config, FactoryInterface $factory)
     {
@@ -47,7 +47,7 @@ class SessionFactory implements SingletonInterface
      *
      * @return \Spiral\Session\SessionInterface
      *
-     * @throws \Spiral\Session\Exceptions\MultipleSessionException
+     * @throws \Spiral\Session\Exception\MultipleSessionException
      */
     public function initSession(string $clientSignature, string $id = null): SessionInterface
     {

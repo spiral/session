@@ -10,8 +10,8 @@ namespace Spiral\Session\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container\Autowire;
-use Spiral\Session\Configs\SessionConfig;
-use Spiral\Session\Handlers\FileHandler;
+use Spiral\Session\Config\SessionConfig;
+use Spiral\Session\Handler\FileHandler;
 
 class ConfigTest extends TestCase
 {

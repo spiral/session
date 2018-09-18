@@ -8,7 +8,7 @@
 
 namespace Spiral\Session;
 
-use Spiral\Session\Exceptions\SessionException;
+use Spiral\Session\Exception\SessionException;
 
 /**
  * Direct api to php session functionality with segmentation support. Automatically provides access

@@ -9,7 +9,7 @@
 namespace Spiral\Session;
 
 use Spiral\Core\Container\InjectorInterface;
-use Spiral\Session\Exceptions\SessionException;
+use Spiral\Session\Exception\SessionException;
 
 /**
  * API wrapping for native php sessions. Must provide ability for section injections.

@@ -10,8 +10,8 @@ namespace Spiral\Session\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Session\Configs\SessionConfig;
-use Spiral\Session\Handlers\FileHandler;
+use Spiral\Session\Config\SessionConfig;
+use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Session;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
@@ -26,7 +26,7 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Session\Exceptions\SessionException
+     * @expectedException \Spiral\Session\Exception\SessionException
      */
     public function testConstructInvalid()
     {
@@ -44,7 +44,7 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Session\Exceptions\SessionException
+     * @expectedException \Spiral\Session\Exception\SessionException
      */
     public function testAlreadyStarted()
     {
@@ -62,7 +62,7 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Session\Exceptions\SessionException
+     * @expectedException \Spiral\Session\Exception\SessionException
      * @expectedExceptionMessage Unable to initiate session, session already started
      */
     public function testMultipleSessions()

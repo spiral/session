@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Session\Exceptions;
+namespace Spiral\Session\Exception;
 
-class MultipleSessionException extends SessionException
+class SessionException extends \RuntimeException
 {
 
 }
