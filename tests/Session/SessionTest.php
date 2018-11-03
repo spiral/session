@@ -181,6 +181,21 @@ class SessionTest extends TestCase
         $this->assertNotSame($id, $session->getID());
     }
 
+    public function testResumeNewSession()
+    {
+        $session = $this->factory->initSession('sig');
+        $session->resume();
+        $id = $session->getID();
+
+        $this->assertTrue($session->isStarted());
+        $session->commit();
+
+        $session = $this->factory->initSession('sig');
+        $session->resume();
+
+        $this->assertNotSame($id, $session->getID());
+    }
+
     public function testInjection()
     {
         $session = $this->factory->initSession('sig');

@@ -92,12 +92,14 @@ class Session implements SessionInterface
         }
 
         if (!empty($this->id)) {
-            //Add support for strict mode when switched to 7.1
             session_id($this->id);
+        } else {
+            // always new id
+            session_id(session_create_id());
         }
 
         try {
-            session_start();
+            session_start(['use_cookies' => false]);
         } catch (\Throwable $e) {
             throw new SessionException("Unable to start session", $e->getCode(), $e);
         }

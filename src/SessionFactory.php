@@ -55,9 +55,6 @@ class SessionFactory implements SingletonInterface
             throw new MultipleSessionException("Unable to initiate session, session already started");
         }
 
-        // disable native cookies
-        ini_set('session.use_cookies', false);
-
         //Initiating proper session handler
         if (!empty($this->config->getHandler())) {
             try {
