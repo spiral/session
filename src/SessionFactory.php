@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Session;
 
@@ -18,7 +19,7 @@ use Spiral\Session\Exception\SessionException;
 /**
  * Initiates session instance and configures session handlers.
  */
-class SessionFactory implements SingletonInterface
+final class SessionFactory implements SingletonInterface
 {
     /**
      * @var \Spiral\Session\Config\SessionConfig
@@ -44,7 +45,6 @@ class SessionFactory implements SingletonInterface
      * @param string $clientSignature User specific token, does not provide full security but
      *                                hardens session transfer.
      * @param string $id              When null - expect php to create session automatically.
-     *
      * @return \Spiral\Session\SessionInterface
      *
      * @throws \Spiral\Session\Exception\MultipleSessionException

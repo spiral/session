@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Session\Handler;
 
@@ -13,7 +14,7 @@ use Spiral\Files\FilesInterface;
 /**
  * Stores session data in file.
  */
-class FileHandler implements \SessionHandlerInterface
+final class FileHandler implements \SessionHandlerInterface
 {
     /**
      * @var FilesInterface

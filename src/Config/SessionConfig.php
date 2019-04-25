@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Session\Config;
 
@@ -14,7 +15,7 @@ use Spiral\Core\InjectableConfig;
 /**
  * SessionManager configuration.
  */
-class SessionConfig extends InjectableConfig
+final class SessionConfig extends InjectableConfig
 {
     const CONFIG = 'session';
 

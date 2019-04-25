@@ -71,6 +71,28 @@ class SessionTest extends TestCase
         $this->assertSame(null, $session->getSection()->get('key'));
     }
 
+
+    public function testValueAbort()
+    {
+        $session = $this->factory->initSession('sig');
+        $session->getSection()->set('key', 'value');
+
+        $this->assertSame('value', $session->getSection()->get('key'));
+        $id = $session->getID();
+
+        $session->commit();
+
+        $session = $this->factory->initSession('sig', $id);
+        $this->assertSame('value', $session->getSection()->get('key'));
+        $session->getSection()->set('key', 'value2');
+        $this->assertSame('value2', $session->getSection()->get('key'));
+        $session->abort();
+
+        $session = $this->factory->initSession('sig', $id);
+        $this->assertSame('value', $session->getSection()->get('key'));
+        $session->destroy();
+    }
+
     public function testValueRestart()
     {
         $session = $this->factory->initSession('sig');

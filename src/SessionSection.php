@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Session;
 
@@ -13,13 +14,11 @@ use Spiral\Core\Container\InjectableInterface;
 /**
  * Represents part of _SESSION array.
  */
-class SessionSection implements SectionInterface, InjectableInterface
+final class SessionSection implements SectionInterface, InjectableInterface
 {
     const INJECTOR = SessionInterface::class;
 
-    /**
-     * @var SessionInterface
-     */
+    /** @var SessionInterface     */
     private $session;
 
     /**

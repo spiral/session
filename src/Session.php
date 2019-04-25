@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Session;
 
@@ -18,7 +19,7 @@ use Spiral\Session\Exception\SessionException;
  *
  * @see  https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
  */
-class Session implements SessionInterface
+final class Session implements SessionInterface
 {
     /**
      * Signs every session with user specific hash, provides ability to fixate session.
@@ -167,6 +168,22 @@ class Session implements SessionInterface
     /**
      * @inheritdoc
      */
+    public function abort(): bool
+    {
+        if (!$this->isStarted()) {
+            return false;
+        }
+
+        session_abort();
+        $this->started = false;
+
+        return true;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
     public function destroy(): bool
     {
         $this->resume();
@@ -211,12 +228,11 @@ class Session implements SessionInterface
      * Check if given session ID valid.
      *
      * @param string $id
-     *
      * @return bool
      */
     private function validID(string $id): bool
     {
-        return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id);
+        return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id) !== false;
     }
 
     /**

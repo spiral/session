@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Session;
 
@@ -48,6 +49,13 @@ interface SessionInterface extends InjectorInterface
      * @return bool
      */
     public function commit(): bool;
+
+    /**
+     * Discard all the session changes and close the session.
+     *
+     * @return bool
+     */
+    public function abort(): bool;
 
     /**
      * Destroys all data associated with session but does not regenerate it IDs.

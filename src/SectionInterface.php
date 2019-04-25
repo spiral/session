@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Session;
 
@@ -34,8 +35,8 @@ interface SectionInterface extends \IteratorAggregate, \ArrayAccess
      *
      * @param string $name
      * @param mixed  $value
-     *
      * @return mixed
+     *
      * @throws SessionException
      */
     public function set(string $name, $value);
@@ -44,8 +45,8 @@ interface SectionInterface extends \IteratorAggregate, \ArrayAccess
      * Check if value presented in session.
      *
      * @param string $name
-     *
      * @return bool
+     *
      * @throws SessionException
      */
     public function has(string $name);
@@ -55,8 +56,8 @@ interface SectionInterface extends \IteratorAggregate, \ArrayAccess
      *
      * @param string $name
      * @param mixed  $default
-     *
      * @return mixed
+     *
      * @throws SessionException
      */
     public function get(string $name, $default = null);
@@ -66,8 +67,8 @@ interface SectionInterface extends \IteratorAggregate, \ArrayAccess
      *
      * @param string $name
      * @param mixed  $default Default value when no such item exists.
-     *
      * @return mixed
+     *
      * @throws SessionException
      */
     public function pull(string $name, $default = null);
