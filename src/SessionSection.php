@@ -41,7 +41,6 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
      * Shortcut for get.
      *
      * @param string $name
-     *
      * @return mixed|null
      */
     public function __get(string $name)
@@ -184,7 +183,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
      */
     public function offsetSet($offset, $value)
     {
-        return $this->set($offset, $value);
+        $this->set($offset, $value);
     }
 
     /**
@@ -192,7 +191,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
      */
     public function offsetUnset($offset)
     {
-        return $this->delete($offset);
+        $this->delete($offset);
     }
 
     /**

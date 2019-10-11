@@ -58,7 +58,7 @@ final class SessionConfig extends InjectableConfig
     /**
      * Get handler autowire options.
      *
-     * @return Autowire
+     * @return Autowire|null
      */
     public function getHandler(): ?Autowire
     {
