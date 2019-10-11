@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +16,7 @@ use Spiral\Session\Handler\NullHandler;
 
 class NullHandlerTest extends TestCase
 {
-    public function testNullHandler()
+    public function testNullHandler(): void
     {
         $handler = new NullHandler();
 

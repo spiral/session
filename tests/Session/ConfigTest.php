@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -15,7 +18,7 @@ use Spiral\Session\Handler\FileHandler;
 
 class ConfigTest extends TestCase
 {
-    public function testConfig()
+    public function testConfig(): void
     {
         $c = new SessionConfig([
             'lifetime' => 86400,
@@ -38,7 +41,7 @@ class ConfigTest extends TestCase
         ]), $c->getHandler());
     }
 
-    public function testConfigAutowired()
+    public function testConfigAutowired(): void
     {
         $c = new SessionConfig([
             'lifetime' => 86400,

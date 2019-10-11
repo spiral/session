@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,11 +15,9 @@ use Spiral\Core\Container\InjectableInterface;
 /**
  * Represents part of _SESSION array.
  */
-final class SessionSection implements SectionInterface, InjectableInterface
+final class SessionSection implements SessionSectionInterface, InjectableInterface
 {
-    const INJECTOR = SessionInterface::class;
-
-    /** @var SessionInterface     */
+    /** @var SessionInterface */
     private $session;
 
     /**
@@ -36,6 +35,45 @@ final class SessionSection implements SectionInterface, InjectableInterface
     {
         $this->session = $session;
         $this->name = $name;
+    }
+
+    /**
+     * Shortcut for get.
+     *
+     * @param string $name
+     *
+     * @return mixed|null
+     */
+    public function __get(string $name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     */
+    public function __set(string $name, $value): void
+    {
+        $this->set($name, $value);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function __isset(string $name)
+    {
+        return $this->has($name);
+    }
+
+    /**
+     * @param string $name
+     */
+    public function __unset(string $name): void
+    {
+        $this->delete($name);
     }
 
     /**
@@ -67,7 +105,7 @@ final class SessionSection implements SectionInterface, InjectableInterface
     /**
      * @inheritdoc
      */
-    public function set(string $name, $value)
+    public function set(string $name, $value): void
     {
         $this->resumeSection();
 
@@ -110,7 +148,7 @@ final class SessionSection implements SectionInterface, InjectableInterface
     /**
      * @inheritdoc
      */
-    public function delete(string $name)
+    public function delete(string $name): void
     {
         $this->resumeSection();
         unset($_SESSION[$this->name][$name]);
@@ -119,49 +157,10 @@ final class SessionSection implements SectionInterface, InjectableInterface
     /**
      * @inheritdoc
      */
-    public function clear()
+    public function clear(): void
     {
         $this->resumeSection();
         $_SESSION[$this->name] = [];
-    }
-
-    /**
-     * Shortcut for get.
-     *
-     * @param string $name
-     *
-     * @return mixed|null
-     */
-    public function __get(string $name)
-    {
-        return $this->get($name);
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     */
-    public function __set(string $name, $value)
-    {
-        $this->set($name, $value);
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function __isset(string $name)
-    {
-        return $this->has($name);
-    }
-
-    /**
-     * @param string $name
-     */
-    public function __unset(string $name)
-    {
-        $this->delete($name);
     }
 
     /**
@@ -199,7 +198,7 @@ final class SessionSection implements SectionInterface, InjectableInterface
     /**
      * Ensure that session have proper section.
      */
-    private function resumeSection()
+    private function resumeSection(): void
     {
         $this->session->resume();
 

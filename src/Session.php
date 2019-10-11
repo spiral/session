@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -24,17 +25,17 @@ final class Session implements SessionInterface
     /**
      * Signs every session with user specific hash, provides ability to fixate session.
      */
-    const CLIENT_SIGNATURE = '_CLIENT_SIGNATURE';
+    private const CLIENT_SIGNATURE = '_CLIENT_SIGNATURE';
 
     /**
      * Time when session been created or refreshed.
      */
-    const SESSION_CREATED = '_CREATED';
+    private const SESSION_CREATED = '_CREATED';
 
     /**
      * Locations for unnamed segments i.e. default segment.
      */
-    const DEFAULT_SECTION = '_DEFAULT';
+    private const DEFAULT_SECTION = '_DEFAULT';
 
     /**
      * Unique string to identify client. Signature is stored inside the session.
@@ -76,6 +77,19 @@ final class Session implements SessionInterface
     }
 
     /**
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'id'        => $this->id,
+            'signature' => $this->clientSignature,
+            'started'   => $this->isStarted(),
+            'data'      => $this->isStarted() ? $_SESSION : null
+        ];
+    }
+
+    /**
      * @inheritdoc
      */
     public function isStarted(): bool
@@ -86,7 +100,7 @@ final class Session implements SessionInterface
     /**
      * @inheritdoc
      */
-    public function resume()
+    public function resume(): void
     {
         if ($this->isStarted()) {
             return;
@@ -102,7 +116,7 @@ final class Session implements SessionInterface
         try {
             session_start(['use_cookies' => false]);
         } catch (\Throwable $e) {
-            throw new SessionException("Unable to start session", $e->getCode(), $e);
+            throw new SessionException('Unable to start session', $e->getCode(), $e);
         }
 
         if (empty($this->id)) {
@@ -198,41 +212,9 @@ final class Session implements SessionInterface
     /**
      * @inheritdoc
      */
-    public function getSection(string $name = null): SectionInterface
+    public function getSection(string $name = null): SessionSectionInterface
     {
         return new SessionSection($this, $name ?? static::DEFAULT_SECTION);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function createInjection(\ReflectionClass $class, string $context = null)
-    {
-        return $this->getSection($context);
-    }
-
-    /**
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return [
-            'id'        => $this->id,
-            'signature' => $this->clientSignature,
-            'started'   => $this->isStarted(),
-            'data'      => $this->isStarted() ? $_SESSION : null
-        ];
-    }
-
-    /**
-     * Check if given session ID valid.
-     *
-     * @param string $id
-     * @return bool
-     */
-    private function validID(string $id): bool
-    {
-        return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id) !== false;
     }
 
     /**
@@ -266,12 +248,23 @@ final class Session implements SessionInterface
     /**
      * To be called in cases when client does not supplied proper session signature.
      */
-    protected function invalidateSession()
+    protected function invalidateSession(): void
     {
         //Destroy all session data
         $this->destroy();
 
         //Switch user to new session
         $this->regenerateID();
+    }
+
+    /**
+     * Check if given session ID valid.
+     *
+     * @param string $id
+     * @return bool
+     */
+    private function validID(string $id): bool
+    {
+        return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id) !== false;
     }
 }

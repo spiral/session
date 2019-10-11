@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -15,7 +18,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\Session\Bootloaders\SessionBootloader;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Handler\FileHandler;
-use Spiral\Session\SectionInterface;
+use Spiral\Session\SessionSectionInterface;
 use Spiral\Session\Session;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
@@ -33,13 +36,13 @@ class SessionTest extends TestCase
      */
     private $factory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = new Container();
         $this->container->bind(FilesInterface::class, Files::class);
 
         $this->container->bind(SessionInterface::class, Session::class);
-        $this->container->bind(SectionInterface::class, SessionSection::class);
+        $this->container->bind(SessionSectionInterface::class, SessionSection::class);
 
         $this->factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
@@ -51,14 +54,14 @@ class SessionTest extends TestCase
         ]), $this->container);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
             session_abort();
         }
     }
 
-    public function testValueDestroy()
+    public function testValueDestroy(): void
     {
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
@@ -72,7 +75,7 @@ class SessionTest extends TestCase
     }
 
 
-    public function testValueAbort()
+    public function testValueAbort(): void
     {
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
@@ -93,7 +96,7 @@ class SessionTest extends TestCase
         $session->destroy();
     }
 
-    public function testValueRestart()
+    public function testValueRestart(): void
     {
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
@@ -106,7 +109,7 @@ class SessionTest extends TestCase
         $this->assertSame('value', $session->getSection()->get('key'));
     }
 
-    public function testValueNewID()
+    public function testValueNewID(): void
     {
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
@@ -119,37 +122,37 @@ class SessionTest extends TestCase
         $this->assertSame('value', $session->getSection()->get('key'));
     }
 
-    public function testSection()
+    public function testSection(): void
     {
         $session = $this->factory->initSession('sig');
         $section = $session->getSection('default');
 
-        $this->assertSame("default", $section->getName());
+        $this->assertSame('default', $section->getName());
 
-        $section->set("key", "value");
+        $section->set('key', 'value');
         foreach ($section as $key => $value) {
-            $this->assertSame("key", $key);
-            $this->assertSame("value", $value);
+            $this->assertSame('key', $key);
+            $this->assertSame('value', $value);
         }
 
-        $this->assertSame("key", $key);
-        $this->assertSame("value", $value);
+        $this->assertSame('key', $key);
+        $this->assertSame('value', $value);
 
-        $this->assertSame("value", $section->pull("key"));
-        $this->assertSame(null, $section->pull("key"));
+        $this->assertSame('value', $section->pull('key'));
+        $this->assertSame(null, $section->pull('key'));
     }
 
-    public function testSectionClear()
+    public function testSectionClear(): void
     {
         $session = $this->factory->initSession('sig');
         $section = $session->getSection('default');
 
-        $section->set("key", "value");
+        $section->set('key', 'value');
         $section->clear();
-        $this->assertSame(null, $section->pull("key"));
+        $this->assertSame(null, $section->pull('key'));
     }
 
-    public function testSectionArrayAccess()
+    public function testSectionArrayAccess(): void
     {
         $session = $this->factory->initSession('sig');
         $section = $session->getSection('default');
@@ -174,15 +177,15 @@ class SessionTest extends TestCase
         unset($section['key']);
         $this->assertFalse(isset($section->key));
 
-        $section->new = "another";
+        $section->new = 'another';
 
         $session->commit();
 
-        $this->assertSame(null, $section->get("key"));
-        $this->assertSame("another", $section->get("new"));
+        $this->assertSame(null, $section->get('key'));
+        $this->assertSame('another', $section->get('new'));
     }
 
-    public function testResumeAndID()
+    public function testResumeAndID(): void
     {
         $session = $this->factory->initSession('sig');
         $session->resume();
@@ -203,7 +206,7 @@ class SessionTest extends TestCase
         $this->assertNotSame($id, $session->getID());
     }
 
-    public function testResumeNewSession()
+    public function testResumeNewSession(): void
     {
         $session = $this->factory->initSession('sig');
         $session->resume();
@@ -218,36 +221,27 @@ class SessionTest extends TestCase
         $this->assertNotSame($id, $session->getID());
     }
 
-    public function testInjection()
+    public function testSignatures(): void
     {
         $session = $this->factory->initSession('sig');
-        $this->container->runScope([Session::class => $session], function () {
-            $section = $this->container->get(SectionInterface::class, "default");
-            $this->assertSame("default", $section->getName());
-        });
-    }
-
-    public function testSignatures()
-    {
-        $session = $this->factory->initSession('sig');
-        $session->getSection()->set("key", "value");
+        $session->getSection()->set('key', 'value');
         $session->commit();
 
         $id = $session->getID();
 
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame("value", $session->getSection()->get("key"));
+        $this->assertSame('value', $session->getSection()->get('key'));
         $this->assertSame($id, $session->getID());
         $session->commit();
 
         $session = $this->factory->initSession('different', $id);
-        $this->assertSame(null, $session->getSection()->get("key"));
+        $this->assertSame(null, $session->getSection()->get('key'));
         $this->assertNotSame($id, $session->getID());
         $session->commit();
 
         // must be dead
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame(null, $session->getSection()->get("key"));
+        $this->assertSame(null, $session->getSection()->get('key'));
         $this->assertNotSame($id, $session->getID());
         $session->commit();
     }

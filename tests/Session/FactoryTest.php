@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -18,7 +21,7 @@ use Spiral\Session\SessionInterface;
 
 class FactoryTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
             session_abort();
@@ -28,7 +31,7 @@ class FactoryTest extends TestCase
     /**
      * @expectedException \Spiral\Session\Exception\SessionException
      */
-    public function testConstructInvalid()
+    public function testConstructInvalid(): void
     {
         $factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
@@ -46,7 +49,7 @@ class FactoryTest extends TestCase
     /**
      * @expectedException \Spiral\Session\Exception\SessionException
      */
-    public function testAlreadyStarted()
+    public function testAlreadyStarted(): void
     {
         $factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
@@ -65,7 +68,7 @@ class FactoryTest extends TestCase
      * @expectedException \Spiral\Session\Exception\SessionException
      * @expectedExceptionMessage Unable to initiate session, session already started
      */
-    public function testMultipleSessions()
+    public function testMultipleSessions(): void
     {
         $factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,

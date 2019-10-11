@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,7 +15,7 @@ use Spiral\Session\Exception\SessionException;
 /**
  * Singular session section (session data isolator).
  */
-interface SectionInterface extends \IteratorAggregate, \ArrayAccess
+interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
 {
     /**
      * Section name.

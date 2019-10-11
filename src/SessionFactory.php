@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -21,19 +22,15 @@ use Spiral\Session\Exception\SessionException;
  */
 final class SessionFactory implements SingletonInterface
 {
-    /**
-     * @var \Spiral\Session\Config\SessionConfig
-     */
+    /** @var SessionConfig */
     private $config;
 
-    /**
-     * @var \Spiral\Core\FactoryInterface
-     */
+    /** @var FactoryInterface */
     private $factory;
 
     /**
-     * @param \Spiral\Session\Config\SessionConfig $config
-     * @param \Spiral\Core\FactoryInterface        $factory
+     * @param SessionConfig    $config
+     * @param FactoryInterface $factory
      */
     public function __construct(SessionConfig $config, FactoryInterface $factory)
     {
@@ -45,21 +42,21 @@ final class SessionFactory implements SingletonInterface
      * @param string $clientSignature User specific token, does not provide full security but
      *                                hardens session transfer.
      * @param string $id              When null - expect php to create session automatically.
-     * @return \Spiral\Session\SessionInterface
+     * @return SessionInterface
      *
-     * @throws \Spiral\Session\Exception\MultipleSessionException
+     * @throws MultipleSessionException
      */
     public function initSession(string $clientSignature, string $id = null): SessionInterface
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
-            throw new MultipleSessionException("Unable to initiate session, session already started");
+            throw new MultipleSessionException('Unable to initiate session, session already started');
         }
 
         //Initiating proper session handler
-        if (!empty($this->config->getHandler())) {
+        if ($this->config->getHandler() !== null) {
             try {
                 $handler = $this->config->getHandler()->resolve($this->factory);
-            } catch (\Throwable|ContainerExceptionInterface $e) {
+            } catch (\Throwable | ContainerExceptionInterface $e) {
                 throw new SessionException($e->getMessage(), $e->getCode(), $e);
             }
 

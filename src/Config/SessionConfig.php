@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -17,7 +18,7 @@ use Spiral\Core\InjectableConfig;
  */
 final class SessionConfig extends InjectableConfig
 {
-    const CONFIG = 'session';
+    public const CONFIG = 'session';
 
     /**
      * @var array

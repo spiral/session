@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -58,7 +59,7 @@ final class FileHandler implements \SessionHandlerInterface
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): void
     {
         foreach ($this->files->getFiles($this->directory) as $filename) {
             if ($this->files->time($filename) < time() - $maxlifetime) {

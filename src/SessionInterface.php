@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -9,13 +10,12 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Session\Exception\SessionException;
 
 /**
  * API wrapping for native php sessions. Must provide ability for section injections.
  */
-interface SessionInterface extends InjectorInterface
+interface SessionInterface
 {
     /**
      * @return bool
@@ -67,7 +67,7 @@ interface SessionInterface extends InjectorInterface
     /**
      * @param string|null $name When null default section to be returned.
      *
-     * @return SectionInterface
+     * @return SessionSectionInterface
      */
-    public function getSection(string $name = null): SectionInterface;
+    public function getSection(string $name = null): SessionSectionInterface;
 }
