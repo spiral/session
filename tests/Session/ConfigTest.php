@@ -36,6 +36,7 @@ class ConfigTest extends TestCase
         $this->assertSame('SID', $c->getCookie());
         $this->assertSame(false, $c->isSecure());
         $this->assertSame(86400, $c->getLifetime());
+        $this->assertNull($c->getSameSite());
         $this->assertEquals(new Autowire(FileHandler::class, [
             'directory' => sys_get_temp_dir()
         ]), $c->getHandler());

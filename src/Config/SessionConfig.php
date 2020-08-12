@@ -27,6 +27,7 @@ final class SessionConfig extends InjectableConfig
         'lifetime' => 86400,
         'cookie'   => 'SID',
         'secure'   => false,
+        'sameSite' => null,
         'handler'  => null,
         'handlers' => []
     ];
@@ -77,5 +78,13 @@ final class SessionConfig extends InjectableConfig
         $handler = $this->config['handlers'][$this->config['handler']];
 
         return new Autowire($handler['class'], $handler['options']);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSameSite(): ?string
+    {
+        return $this->config['sameSite'] ?? null;
     }
 }
