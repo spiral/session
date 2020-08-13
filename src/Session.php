@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -156,7 +157,7 @@ final class Session implements SessionInterface
 
         //Updating session duration
         $_SESSION[self::SESSION_CREATED] = time();
-        session_commit();
+        session_write_close();
 
         //Restarting session under new ID
         $this->resume();

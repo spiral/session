@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -39,16 +40,15 @@ final class SessionFactory implements SingletonInterface
     }
 
     /**
-     * @param string $clientSignature User specific token, does not provide full security but
-     *                                hardens session transfer.
-     * @param string $id              When null - expect php to create session automatically.
+     * @param string      $clientSignature User specific token, does not provide full security but
+     *                                     hardens session transfer.
+     * @param string|null $id              When null - expect php to create session automatically.
      * @return SessionInterface
      *
-     * @throws MultipleSessionException
      */
     public function initSession(string $clientSignature, string $id = null): SessionInterface
     {
-        if (session_status() == PHP_SESSION_ACTIVE) {
+        if ((int)session_status() === PHP_SESSION_ACTIVE) {
             throw new MultipleSessionException('Unable to initiate session, session already started');
         }
 

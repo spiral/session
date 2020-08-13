@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Spiral Framework.
  *
@@ -9,13 +7,14 @@ declare(strict_types=1);
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Session\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
-use Spiral\Session\Bootloaders\SessionBootloader;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\SessionSectionInterface;
@@ -26,10 +25,6 @@ use Spiral\Session\SessionSection;
 
 class SessionTest extends TestCase
 {
-    /**
-     * @var Container
-     */
-    private $container;
 
     /**
      * @var SessionFactory
@@ -38,11 +33,11 @@ class SessionTest extends TestCase
 
     public function setUp(): void
     {
-        $this->container = new Container();
-        $this->container->bind(FilesInterface::class, Files::class);
+        $container = new Container();
+        $container->bind(FilesInterface::class, Files::class);
 
-        $this->container->bind(SessionInterface::class, Session::class);
-        $this->container->bind(SessionSectionInterface::class, SessionSection::class);
+        $container->bind(SessionInterface::class, Session::class);
+        $container->bind(SessionSectionInterface::class, SessionSection::class);
 
         $this->factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
@@ -51,12 +46,12 @@ class SessionTest extends TestCase
             'handler'  => new Container\Autowire(FileHandler::class, [
                 'directory' => sys_get_temp_dir()
             ]),
-        ]), $this->container);
+        ]), $container);
     }
 
     public function tearDown(): void
     {
-        if (session_status() == PHP_SESSION_ACTIVE) {
+        if ((int)session_status() === PHP_SESSION_ACTIVE) {
             session_abort();
         }
     }
@@ -71,7 +66,7 @@ class SessionTest extends TestCase
         $session->destroy();
         $session->resume();
 
-        $this->assertSame(null, $session->getSection()->get('key'));
+        $this->assertNull($session->getSection()->get('key'));
     }
 
 
@@ -139,7 +134,7 @@ class SessionTest extends TestCase
         $this->assertSame('value', $value);
 
         $this->assertSame('value', $section->pull('key'));
-        $this->assertSame(null, $section->pull('key'));
+        $this->assertNull($section->pull('key'));
     }
 
     public function testSectionClear(): void
@@ -149,7 +144,7 @@ class SessionTest extends TestCase
 
         $section->set('key', 'value');
         $section->clear();
-        $this->assertSame(null, $section->pull('key'));
+        $this->assertNull($section->pull('key'));
     }
 
     public function testSectionArrayAccess(): void
@@ -181,7 +176,7 @@ class SessionTest extends TestCase
 
         $session->commit();
 
-        $this->assertSame(null, $section->get('key'));
+        $this->assertNull($section->get('key'));
         $this->assertSame('another', $section->get('new'));
     }
 
@@ -235,13 +230,13 @@ class SessionTest extends TestCase
         $session->commit();
 
         $session = $this->factory->initSession('different', $id);
-        $this->assertSame(null, $session->getSection()->get('key'));
+        $this->assertNull($session->getSection()->get('key'));
         $this->assertNotSame($id, $session->getID());
         $session->commit();
 
         // must be dead
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame(null, $session->getSection()->get('key'));
+        $this->assertNull($session->getSection()->get('key'));
         $this->assertNotSame($id, $session->getID());
         $session->commit();
     }

@@ -1,13 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
+declare(strict_types=1);
 
 namespace Spiral\Session\Tests;
 
@@ -34,7 +34,7 @@ class ConfigTest extends TestCase
         ]);
 
         $this->assertSame('SID', $c->getCookie());
-        $this->assertSame(false, $c->isSecure());
+        $this->assertFalse($c->isSecure());
         $this->assertSame(86400, $c->getLifetime());
         $this->assertNull($c->getSameSite());
         $this->assertEquals(new Autowire(FileHandler::class, [

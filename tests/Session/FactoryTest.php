@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Spiral Framework.
  *
@@ -9,11 +7,14 @@ declare(strict_types=1);
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Session\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Session\Config\SessionConfig;
+use Spiral\Session\Exception\SessionException;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Session;
 use Spiral\Session\SessionFactory;
@@ -23,16 +24,14 @@ class FactoryTest extends TestCase
 {
     public function tearDown(): void
     {
-        if (session_status() == PHP_SESSION_ACTIVE) {
+        if ((int)session_status() === PHP_SESSION_ACTIVE) {
             session_abort();
         }
     }
 
-    /**
-     * @expectedException \Spiral\Session\Exception\SessionException
-     */
     public function testConstructInvalid(): void
     {
+        $this->expectException(SessionException::class);
         $factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
             'cookie'   => 'SID',
@@ -43,14 +42,12 @@ class FactoryTest extends TestCase
             ]
         ]), new Container());
 
-        $session = $factory->initSession('sig', 'sessionid');
+        $factory->initSession('sig', 'sessionid');
     }
 
-    /**
-     * @expectedException \Spiral\Session\Exception\SessionException
-     */
     public function testAlreadyStarted(): void
     {
+        $this->expectException(SessionException::class);
         $factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
             'cookie'   => 'SID',
@@ -61,15 +58,13 @@ class FactoryTest extends TestCase
             ]
         ]), new Container());
 
-        $session = $factory->initSession('sig', 'sessionid');
+        $factory->initSession('sig', 'sessionid');
     }
 
-    /**
-     * @expectedException \Spiral\Session\Exception\SessionException
-     * @expectedExceptionMessage Unable to initiate session, session already started
-     */
     public function testMultipleSessions(): void
     {
+        $this->expectExceptionMessage('Unable to initiate session, session already started');
+        $this->expectException(SessionException::class);
         $factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
             'cookie'   => 'SID',
@@ -83,6 +78,6 @@ class FactoryTest extends TestCase
         $session = $factory->initSession('sig');
         $session->resume();
 
-        $session = $factory->initSession('sig', $session->getID());
+        $factory->initSession('sig', $session->getID());
     }
 }

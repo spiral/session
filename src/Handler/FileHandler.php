@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Session\Handler;
@@ -41,7 +42,7 @@ final class FileHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -50,7 +51,7 @@ final class FileHandler implements \SessionHandlerInterface
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    public function destroy($session_id)
+    public function destroy($session_id): bool
     {
         return $this->files->delete($this->getFilename($session_id));
     }
@@ -71,7 +72,7 @@ final class FileHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function open($save_path, $session_id)
+    public function open($save_path, $session_id): bool
     {
         return true;
     }
@@ -79,7 +80,7 @@ final class FileHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function read($session_id)
+    public function read($session_id): string
     {
         return $this->files->exists($this->getFilename($session_id))
             ? $this->files->read($this->getFilename($session_id))
@@ -89,7 +90,7 @@ final class FileHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function write($session_id, $session_data)
+    public function write($session_id, $session_data): bool
     {
         return $this->files->write(
             $this->getFilename($session_id),
@@ -106,7 +107,7 @@ final class FileHandler implements \SessionHandlerInterface
      *
      * @return string
      */
-    protected function getFilename($session_id)
+    protected function getFilename($session_id): string
     {
         return "{$this->directory}/{$session_id}";
     }

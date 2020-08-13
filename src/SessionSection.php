@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -29,7 +30,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
 
     /**
      * @param SessionInterface $session
-     * @param string           $name
+     * @param string|null      $name
      */
     public function __construct(SessionInterface $session, string $name = null)
     {
@@ -114,7 +115,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function has(string $name)
+    public function has(string $name): bool
     {
         $this->resumeSection();
 
@@ -165,7 +166,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->has($offset);
     }
@@ -181,7 +182,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->set($offset, $value);
     }
@@ -189,7 +190,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->delete($offset);
     }
