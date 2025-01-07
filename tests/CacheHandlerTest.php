@@ -30,44 +30,44 @@ final class CacheHandlerTest extends TestCase
 
     public function testClose(): void
     {
-        self::assertTrue($this->handler->close());
+        $this->assertTrue($this->handler->close());
     }
 
     public function testDestroy(): void
     {
         $this->cache->shouldReceive('delete')->with('session:foo')->andReturn(true);
 
-        self::assertTrue($this->handler->destroy('foo'));
+        $this->assertTrue($this->handler->destroy('foo'));
     }
 
     public function testGc(): void
     {
-        self::assertSame(0, $this->handler->gc(100));
+        $this->assertSame(0, $this->handler->gc(100));
     }
 
     public function testOpen(): void
     {
-        self::assertTrue($this->handler->open('root', 'test'));
+        $this->assertTrue($this->handler->open('root', 'test'));
     }
 
     public function testRead(): void
     {
         $this->cache->shouldReceive('get')->with('session:foo')->andReturn('bar');
 
-        self::assertSame('bar', $this->handler->read('foo'));
+        $this->assertSame('bar', $this->handler->read('foo'));
     }
 
     public function testReadExpired(): void
     {
         $this->cache->shouldReceive('get')->with('session:foo')->andReturn(null);
 
-        self::assertSame('', $this->handler->read('foo'));
+        $this->assertSame('', $this->handler->read('foo'));
     }
 
     public function testWrite(): void
     {
         $this->cache->shouldReceive('set')->with('session:foo', 'bar', 86400)->andReturn(true);
 
-        self::assertTrue($this->handler->write('foo', 'bar'));
+        $this->assertTrue($this->handler->write('foo', 'bar'));
     }
 }
