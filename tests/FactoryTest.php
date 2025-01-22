@@ -13,7 +13,7 @@ use Spiral\Session\SessionInterface;
 
 final class FactoryTest extends TestCase
 {
-    protected function tearDown(): void
+    public function tearDown(): void
     {
         if ((int)session_status() === PHP_SESSION_ACTIVE) {
             session_abort();
