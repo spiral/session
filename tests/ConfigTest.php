@@ -21,17 +21,17 @@ class ConfigTest extends TestCase
             'handlers' => [
                 'files' => [
                     'class'   => FileHandler::class,
-                    'options' => ['directory' => sys_get_temp_dir()]
-                ]
-            ]
+                    'options' => ['directory' => sys_get_temp_dir()],
+                ],
+            ],
         ]);
 
-        $this->assertSame('SID', $c->getCookie());
-        $this->assertFalse($c->isSecure());
-        $this->assertSame(86400, $c->getLifetime());
-        $this->assertNull($c->getSameSite());
-        $this->assertEquals(new Autowire(FileHandler::class, [
-            'directory' => sys_get_temp_dir()
+        self::assertSame('SID', $c->getCookie());
+        self::assertFalse($c->isSecure());
+        self::assertSame(86400, $c->getLifetime());
+        self::assertNull($c->getSameSite());
+        self::assertEquals(new Autowire(FileHandler::class, [
+            'directory' => sys_get_temp_dir(),
         ]), $c->getHandler());
     }
 
@@ -44,8 +44,8 @@ class ConfigTest extends TestCase
             'handler'  => new Autowire(FileHandler::class, ['directory' => sys_get_temp_dir()]),
         ]);
 
-        $this->assertEquals(new Autowire(FileHandler::class, [
-            'directory' => sys_get_temp_dir()
+        self::assertEquals(new Autowire(FileHandler::class, [
+            'directory' => sys_get_temp_dir(),
         ]), $c->getHandler());
     }
 }
