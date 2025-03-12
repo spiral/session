@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Session;
 
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Spiral\Core\Container;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
@@ -16,7 +15,6 @@ use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 use Spiral\Session\SessionSection;
 
-#[RunTestsInSeparateProcesses]
 final class SessionTest extends TestCase
 {
     private SessionFactory $factory;
