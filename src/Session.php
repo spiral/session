@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
+use Spiral\Core\Attribute\Scope;
 use Spiral\Session\Exception\SessionException;
 
 /**
@@ -14,6 +15,7 @@ use Spiral\Session\Exception\SessionException;
  *
  * @see  https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
  */
+#[Scope('http')]
 final class Session implements SessionInterface
 {
     /**
@@ -41,21 +43,11 @@ final class Session implements SessionInterface
     public function __construct(
         private readonly string $clientSignature,
         private readonly int $lifetime,
-        string $id = null
+        ?string $id = null,
     ) {
         if (!empty($id) && $this->validID($id)) {
             $this->id = $id;
         }
-    }
-
-    public function __debugInfo(): array
-    {
-        return [
-            'id'        => $this->id,
-            'signature' => $this->clientSignature,
-            'started'   => $this->isStarted(),
-            'data'      => $this->isStarted() ? $_SESSION : null,
-        ];
     }
 
     public function isStarted(): bool
@@ -156,9 +148,19 @@ final class Session implements SessionInterface
         return $this->commit();
     }
 
-    public function getSection(string $name = null): SessionSectionInterface
+    public function getSection(?string $name = null): SessionSectionInterface
     {
         return new SessionSection($this, $name ?? self::DEFAULT_SECTION);
+    }
+
+    public function __debugInfo(): array
+    {
+        return [
+            'id'        => $this->id,
+            'signature' => $this->clientSignature,
+            'started'   => $this->isStarted(),
+            'data'      => $this->isStarted() ? $_SESSION : null,
+        ];
     }
 
     /**

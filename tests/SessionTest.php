@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Session;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Spiral\Core\Container;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
@@ -16,71 +16,42 @@ use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 use Spiral\Session\SessionSection;
 
-class SessionTest extends TestCase
+#[RunTestsInSeparateProcesses]
+final class SessionTest extends TestCase
 {
-
-    /**
-     * @var SessionFactory
-     */
-    private $factory;
-
-    public function setUp(): void
-    {
-        $container = new Container();
-        $container->bind(FilesInterface::class, Files::class);
-
-        $container->bind(SessionInterface::class, Session::class);
-        $container->bind(SessionSectionInterface::class, SessionSection::class);
-
-        $this->factory = new SessionFactory(new SessionConfig([
-            'lifetime' => 86400,
-            'cookie'   => 'SID',
-            'secure'   => false,
-            'handler'  => new Container\Autowire(FileHandler::class, [
-                'directory' => sys_get_temp_dir()
-            ]),
-        ]), $container);
-    }
-
-    public function tearDown(): void
-    {
-        if ((int)session_status() === PHP_SESSION_ACTIVE) {
-            session_abort();
-        }
-    }
+    private SessionFactory $factory;
 
     public function testValueDestroy(): void
     {
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
 
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
 
         $session->destroy();
         $session->resume();
 
-        $this->assertNull($session->getSection()->get('key'));
+        self::assertNull($session->getSection()->get('key'));
     }
-
 
     public function testValueAbort(): void
     {
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
 
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
         $id = $session->getID();
 
         $session->commit();
 
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
         $session->getSection()->set('key', 'value2');
-        $this->assertSame('value2', $session->getSection()->get('key'));
+        self::assertSame('value2', $session->getSection()->get('key'));
         $session->abort();
 
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
         $session->destroy();
     }
 
@@ -89,12 +60,12 @@ class SessionTest extends TestCase
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
 
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
         $id = $session->getID();
         $session->commit();
 
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
     }
 
     public function testValueNewID(): void
@@ -102,12 +73,12 @@ class SessionTest extends TestCase
         $session = $this->factory->initSession('sig');
         $session->getSection()->set('key', 'value');
 
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
         $id = $session->regenerateID()->getID();
         $session->commit();
 
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame('value', $session->getSection()->get('key'));
+        self::assertSame('value', $session->getSection()->get('key'));
     }
 
     public function testSection(): void
@@ -115,19 +86,19 @@ class SessionTest extends TestCase
         $session = $this->factory->initSession('sig');
         $section = $session->getSection('default');
 
-        $this->assertSame('default', $section->getName());
+        self::assertSame('default', $section->getName());
 
         $section->set('key', 'value');
         foreach ($section as $key => $value) {
-            $this->assertSame('key', $key);
-            $this->assertSame('value', $value);
+            self::assertSame('key', $key);
+            self::assertSame('value', $value);
         }
 
-        $this->assertSame('key', $key);
-        $this->assertSame('value', $value);
+        self::assertSame('key', $key);
+        self::assertSame('value', $value);
 
-        $this->assertSame('value', $section->pull('key'));
-        $this->assertNull($section->pull('key'));
+        self::assertSame('value', $section->pull('key'));
+        self::assertNull($section->pull('key'));
     }
 
     public function testSectionClear(): void
@@ -137,7 +108,7 @@ class SessionTest extends TestCase
 
         $section->set('key', 'value');
         $section->clear();
-        $this->assertNull($section->pull('key'));
+        self::assertNull($section->pull('key'));
     }
 
     public function testSectionArrayAccess(): void
@@ -146,31 +117,31 @@ class SessionTest extends TestCase
         $section = $session->getSection('default');
 
         $section['key'] = 'value';
-        $this->assertSame('value', $section['key']);
+        self::assertSame('value', $section['key']);
         $section->key = 'new value';
-        $this->assertSame('new value', $section->key);
-        $this->assertTrue(isset($section['key']));
-        $this->assertTrue(isset($section->key));
+        self::assertSame('new value', $section->key);
+        self::assertArrayHasKey('key', $section);
+        self::assertTrue(isset($section->key));
 
         $section->delete('key');
-        $this->assertFalse(isset($section['key']));
-        $this->assertFalse(isset($section->key));
+        self::assertArrayNotHasKey('key', $section);
+        self::assertFalse(isset($section->key));
 
         $section->key = 'new value';
         unset($section->key);
-        $this->assertFalse(isset($section->key));
+        self::assertFalse(isset($section->key));
 
 
         $section->key = 'new value';
         unset($section['key']);
-        $this->assertFalse(isset($section->key));
+        self::assertFalse(isset($section->key));
 
         $section->new = 'another';
 
         $session->commit();
 
-        $this->assertNull($section->get('key'));
-        $this->assertSame('another', $section->get('new'));
+        self::assertNull($section->get('key'));
+        self::assertSame('another', $section->get('new'));
     }
 
     public function testResumeAndID(): void
@@ -179,19 +150,19 @@ class SessionTest extends TestCase
         $session->resume();
         $id = $session->getID();
 
-        $this->assertTrue($session->isStarted());
+        self::assertTrue($session->isStarted());
         $session->commit();
 
-        $this->assertFalse($session->isStarted());
-        $this->assertSame($id, $session->getID());
-        $this->assertFalse($session->isStarted());
+        self::assertFalse($session->isStarted());
+        self::assertSame($id, $session->getID());
+        self::assertFalse($session->isStarted());
 
         $session->destroy();
-        $this->assertSame($id, $session->getID());
+        self::assertSame($id, $session->getID());
 
-        $this->assertSame($id, $session->__debugInfo()['id']);
+        self::assertSame($id, $session->__debugInfo()['id']);
         $session->regenerateID();
-        $this->assertNotSame($id, $session->getID());
+        self::assertNotSame($id, $session->getID());
     }
 
     public function testResumeNewSession(): void
@@ -200,13 +171,13 @@ class SessionTest extends TestCase
         $session->resume();
         $id = $session->getID();
 
-        $this->assertTrue($session->isStarted());
+        self::assertTrue($session->isStarted());
         $session->commit();
 
         $session = $this->factory->initSession('sig');
         $session->resume();
 
-        $this->assertNotSame($id, $session->getID());
+        self::assertNotSame($id, $session->getID());
     }
 
     public function testSignatures(): void
@@ -218,19 +189,44 @@ class SessionTest extends TestCase
         $id = $session->getID();
 
         $session = $this->factory->initSession('sig', $id);
-        $this->assertSame('value', $session->getSection()->get('key'));
-        $this->assertSame($id, $session->getID());
+        self::assertSame('value', $session->getSection()->get('key'));
+        self::assertSame($id, $session->getID());
         $session->commit();
 
         $session = $this->factory->initSession('different', $id);
-        $this->assertNull($session->getSection()->get('key'));
-        $this->assertNotSame($id, $session->getID());
+        self::assertNull($session->getSection()->get('key'));
+        self::assertNotSame($id, $session->getID());
         $session->commit();
 
         // must be dead
         $session = $this->factory->initSession('sig', $id);
-        $this->assertNull($session->getSection()->get('key'));
-        $this->assertNotSame($id, $session->getID());
+        self::assertNull($session->getSection()->get('key'));
+        self::assertNotSame($id, $session->getID());
         $session->commit();
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bind(FilesInterface::class, Files::class);
+        $this->container->bind(SessionInterface::class, Session::class);
+        $this->container->bind(SessionSectionInterface::class, SessionSection::class);
+
+        $this->factory = new SessionFactory(new SessionConfig([
+            'lifetime' => 86400,
+            'cookie'   => 'SID',
+            'secure'   => false,
+            'handler'  => new Container\Autowire(FileHandler::class, [
+                'directory' => \sys_get_temp_dir(),
+            ]),
+        ]), $this->container);
+    }
+
+    protected function tearDown(): void
+    {
+        if ((int) \session_status() === PHP_SESSION_ACTIVE) {
+            \session_abort();
+        }
     }
 }

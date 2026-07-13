@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Session;
 
 use Psr\Container\ContainerExceptionInterface;
+use Spiral\Core\Attribute\Scope;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\FactoryInterface;
 use Spiral\Session\Config\SessionConfig;
@@ -15,15 +16,15 @@ use Spiral\Session\Exception\SessionException;
  * Initiates session instance and configures session handlers.
  */
 #[Singleton]
+#[Scope('http')]
 final class SessionFactory implements SessionFactoryInterface
 {
     public function __construct(
         private readonly SessionConfig $config,
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
-    public function initSession(string $clientSignature, string $id = null): SessionInterface
+    public function initSession(string $clientSignature, ?string $id = null): SessionInterface
     {
         if (\session_status() === PHP_SESSION_ACTIVE) {
             throw new MultipleSessionException('Unable to initiate session, session already started');
