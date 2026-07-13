@@ -9,7 +9,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Handler\FileHandler;
 
-final class ConfigTest extends TestCase
+class ConfigTest extends TestCase
 {
     public function testConfig(): void
     {
@@ -21,17 +21,17 @@ final class ConfigTest extends TestCase
             'handlers' => [
                 'files' => [
                     'class'   => FileHandler::class,
-                    'options' => ['directory' => \sys_get_temp_dir()],
-                ],
-            ],
+                    'options' => ['directory' => sys_get_temp_dir()]
+                ]
+            ]
         ]);
 
-        self::assertSame('SID', $c->getCookie());
-        self::assertFalse($c->isSecure());
-        self::assertSame(86400, $c->getLifetime());
-        self::assertNull($c->getSameSite());
-        self::assertEquals(new Autowire(FileHandler::class, [
-            'directory' => \sys_get_temp_dir(),
+        $this->assertSame('SID', $c->getCookie());
+        $this->assertFalse($c->isSecure());
+        $this->assertSame(86400, $c->getLifetime());
+        $this->assertNull($c->getSameSite());
+        $this->assertEquals(new Autowire(FileHandler::class, [
+            'directory' => sys_get_temp_dir()
         ]), $c->getHandler());
     }
 
@@ -41,11 +41,11 @@ final class ConfigTest extends TestCase
             'lifetime' => 86400,
             'cookie'   => 'SID',
             'secure'   => false,
-            'handler'  => new Autowire(FileHandler::class, ['directory' => \sys_get_temp_dir()]),
+            'handler'  => new Autowire(FileHandler::class, ['directory' => sys_get_temp_dir()]),
         ]);
 
-        self::assertEquals(new Autowire(FileHandler::class, [
-            'directory' => \sys_get_temp_dir(),
+        $this->assertEquals(new Autowire(FileHandler::class, [
+            'directory' => sys_get_temp_dir()
         ]), $c->getHandler());
     }
 }

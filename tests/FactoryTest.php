@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Session;
 
+use PHPUnit\Framework\TestCase;
+use Spiral\Core\Container;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Exception\SessionException;
 use Spiral\Session\Handler\FileHandler;
@@ -11,8 +13,15 @@ use Spiral\Session\Session;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 
-final class FactoryTest extends TestCase
+class FactoryTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        if ((int)session_status() === PHP_SESSION_ACTIVE) {
+            session_abort();
+        }
+    }
+
     public function testConstructInvalid(): void
     {
         $this->expectException(SessionException::class);
@@ -23,8 +32,8 @@ final class FactoryTest extends TestCase
             'handler'  => FileHandler::class,
             'handlers' => [
                 //No directory
-            ],
-        ]), $this->container);
+            ]
+        ]), new Container());
 
         $factory->initSession('sig', 'sessionid');
     }
@@ -39,8 +48,8 @@ final class FactoryTest extends TestCase
             'handler'  => FileHandler::class,
             'handlers' => [
                 //No directory
-            ],
-        ]), $this->container);
+            ]
+        ]), new Container());
 
         $factory->initSession('sig', 'sessionid');
     }
@@ -54,21 +63,14 @@ final class FactoryTest extends TestCase
             'cookie'   => 'SID',
             'secure'   => false,
             'handler'  => null,
-            'handlers' => [],
-        ]), $this->container);
+            'handlers' => []
+        ]), $c = new Container());
 
-        $this->container->bind(SessionInterface::class, Session::class);
+        $c->bind(SessionInterface::class, Session::class);
 
         $session = $factory->initSession('sig');
         $session->resume();
 
         $factory->initSession('sig', $session->getID());
-    }
-
-    protected function tearDown(): void
-    {
-        if ((int) \session_status() === PHP_SESSION_ACTIVE) {
-            \session_abort();
-        }
     }
 }

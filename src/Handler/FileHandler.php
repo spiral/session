@@ -13,8 +13,9 @@ final class FileHandler implements \SessionHandlerInterface
 {
     public function __construct(
         private readonly FilesInterface $files,
-        private readonly string $directory,
-    ) {}
+        private readonly string $directory
+    ) {
+    }
 
     public function close(): bool
     {
