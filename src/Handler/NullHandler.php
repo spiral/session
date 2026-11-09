@@ -7,10 +7,7 @@ namespace Spiral\Session\Handler;
 /**
  * Blackhole.
  */
-final class NullHandler implements
-    \SessionHandlerInterface,
-    \SessionIdInterface,
-    \SessionUpdateTimestampHandlerInterface
+final class NullHandler implements \SessionHandlerInterface
 {
     public function close(): bool
     {
@@ -44,21 +41,6 @@ final class NullHandler implements
     }
 
     public function write(string $id, string $data): bool
-    {
-        return true;
-    }
-
-    public function create_sid(): string
-    {
-        return \bin2hex(\random_bytes(16));
-    }
-
-    public function validateId(string $id): bool
-    {
-        return true;
-    }
-
-    public function updateTimestamp(string $id, string $data): bool
     {
         return true;
     }

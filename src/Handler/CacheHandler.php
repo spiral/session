@@ -8,10 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use Spiral\Cache\CacheStorageProviderInterface;
 
-final class CacheHandler implements
-    \SessionHandlerInterface,
-    \SessionIdInterface,
-    \SessionUpdateTimestampHandlerInterface
+final class CacheHandler implements \SessionHandlerInterface
 {
     private readonly CacheInterface $cache;
 
@@ -65,28 +62,6 @@ final class CacheHandler implements
     public function write(string $id, string $data): bool
     {
         return $this->cache->set($this->getKey($id), $data, $this->ttl);
-    }
-
-    public function create_sid(): string
-    {
-        // Not session_create_id(): during an active session it calls back into this method.
-        return \bin2hex(\random_bytes(16));
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    public function validateId(string $id): bool
-    {
-        return $this->cache->has($this->getKey($id));
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    public function updateTimestamp(string $id, string $data): bool
-    {
-        return $this->write($id, $data);
     }
 
     private function getKey(string $id): string
